@@ -1,5 +1,4 @@
 name: Build LightOS APK
-
 on:
   push:
     branches: [ "main" ]

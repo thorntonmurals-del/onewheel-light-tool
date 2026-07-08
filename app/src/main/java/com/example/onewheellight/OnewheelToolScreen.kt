@@ -24,43 +24,62 @@ fun OnewheelToolScreen(
             .background(Color.Black)
             .padding(24.dp),
         verticalArrangement = Arrangement.SpaceBetween
+            Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(24.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column {
+        // Upper Status Header
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "ONEWHEEL",
-                style = MaterialTheme.typography.h6.copy(color = Color.White, letterSpacing = 2.sp)
+                text = boardName.ifEmpty { "Scanning for Pint X..." },
+                fontSize = 28.sp,
+                color = Color.White,
+                modifier = Modifier.padding(top = 40.dp)
             )
+            
             Text(
-                text = if (isConnected) "CONNECTED" else "SEARCHING...",
-                style = MaterialTheme.typography.caption.copy(color = if (isConnected) Color.White else Color.Gray)
-            )
-        }
-
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = batteryPercentage?.let { "$it%" } ?: "--",
-                style = MaterialTheme.typography.h1.copy(fontSize = 72.sp, color = Color.White)
+                text = if (isConnected) "CONNECTED" else "DISCONNECTED",
+                fontSize = 14.sp,
+                color = if (isConnected) Color.Green else Color.Red,
+                modifier = Modifier.padding(top = 8.dp)
             )
         }
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        // Center Battery Gauge
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = if (batteryPercentage != null) "$batteryPercentage%" else "--",
+                fontSize = 72.sp,
+                color = when {
+                    batteryPercentage == null -> Color.Gray
+                    batteryPercentage <= 20 -> Color.Red
+                    else -> Color.Green
+                }
+            )
+            Text(
+                text = "BATTERY CAPACITY",
+                fontSize = 12.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+
+        // Bottom Quick Action Control
+        Button(
+            onClick = onToggleLights,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 40.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF333333))
         ) {
-            OutlinedButton(
-                onClick = onToggleLights,
-                modifier = Modifier.fillMaxWidth(),
-                border = BorderStroke(1.dp, Color.White),
-                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Black)
-            ) {
-                Text(
-                    text = "TOGGLE HEADLIGHTS", 
-                    style = MaterialTheme.typography.button.copy(color = Color.White)
-                )
-            }
+            Text(
+                text = "TOGGLE LIGHTOS MODE",
+                color = Color.White,
+                modifier = Modifier.padding(vertical = 8.bind())
+            )
         }
     }
-}
